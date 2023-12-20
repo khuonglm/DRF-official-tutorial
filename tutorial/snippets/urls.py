@@ -2,12 +2,13 @@ from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from snippets import views
 
-app_name = 'snippets'
 urlpatterns = [
-    path('snippets/', views.SnippetList.as_view(), name='snippets_list'),
-    path('snippets/<int:pk>/', views.SnippetDetail.as_view(), name='snippets_detail'),
-    path('users/', views.UserList.as_view(), name='users_list'),
-    path('users/<int:pk>/', views.UserDetail.as_view(), name='users_detail'),
+    path('', views.api_root),
+    path('snippets/', views.SnippetList.as_view(), name='snippet-list'),
+    path('snippets/<int:pk>/', views.SnippetDetail.as_view(), name='snippet-detail'),
+    path('snippets/<int:pk>/highlight/', views.SnippetHighlight.as_view(), name='snippet-highlight'),
+    path('users/', views.UserList.as_view(), name='user-list'),
+    path('users/<int:pk>/', views.UserDetail.as_view(), name='user-detail'),
 ]
 
 # add .json, .api, .format after the api, example abc/snippets/ => abc/snippets/.json

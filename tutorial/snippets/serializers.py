@@ -7,26 +7,28 @@ Serializers allow complex data such as querysets and model instances
 to be converted to native Python datatypes that can then be easily rendered 
 into JSON, XML or other content types
 """
-class SnippetSerializer(serializers.ModelSerializer):
-    """
-    The untyped ReadOnlyField is always read-only, 
-    and will be used for serialized representations, 
-    but will not be used for updating model instances 
-    when they are deserialized. We could have also used CharField(read_only=True) here.
-    """
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    """
+    This field is of the same type as the url field, 
+    except that it points to the 'snippet-highlight' url pattern, 
+    instead of the 'snippet-detail' url pattern. 
+    returned format: html
+    """
+    highlight = serializers.HyperlinkedIdentityField(view_name='snippet-highlight', format='html')
+
     class Meta:
         model = Snippet
-        fields = ['id', 'title', 'code', 'linenos', 'language', 'style', 'owner']
+        fields = ['url', 'id', 'highlight', 'owner', 'title', 'code', 'linenos', 'language', 'style']
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     """
     Because 'snippets' is a reverse relationship on the User model, 
     it will not be included by default when using the ModelSerializer class, 
     so we needed to add an explicit field for it.
     """
-    snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
+    snippets = serializers.HyperlinkedRelatedField(many=True, view_name='snippet-detail', read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'snippets']
+        fields = ['url', 'id', 'username', 'snippets']
