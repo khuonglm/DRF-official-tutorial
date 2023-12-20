@@ -4,8 +4,8 @@ from snippets import views
 
 app_name = 'snippets'
 urlpatterns = [
-    path('', views.snippet_list, name='all'),
-    path('<int:pk>/', views.snippet_detail, name='detail'),
+    path('', views.SnippetList.as_view(), name='list'),
+    path('<int:pk>/', views.SnippetDetail.as_view(), name='detail'),
 ]
 
 # add .json, .api, .format after the api, example abc/snippets/ => abc/snippets/.json
